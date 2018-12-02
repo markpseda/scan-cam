@@ -3,3 +3,18 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+
+  form(method='Post' action='/data' enctype="multipart/form-data")
+    div
+      label(for='license') License:
+      input#license(type='text', placeholder='Case Sensitive', name='license')
+    div
+      label(for='coords') GPS-Coords:
+      input#coords(type='text', placeholder='Lat, Long', name='coordinates')
+    div
+      label(for='time') Time:
+      input#time(type='time', name='time')
+    div
+      label(for='picture') picture:
+      input#picture(type='file', name='picture', accept="image/*")
+    button(type='submit') Save Data
