@@ -3,7 +3,8 @@ extends layout
 block content
     ul
         for d in info
-            li= d.license
+            li= "Licence Plate Number: " + d.license
             //img(src = d.picture)
-            li= d.time
+            li= "Coordinates: " + d.coordinates
+            li= "Time Taken: " + d.time
             br
