@@ -9,7 +9,7 @@
     <script defer src="/__/firebase/5.8.4/firebase-app.js"></script>
     <!-- include only the Firebase features as you need -->
     <script defer src="/__/firebase/5.8.4/firebase-auth.js"></script>
-    <script defer src="/__/firebase/5.8.4/firebase-database.js"></script>
+    <script defer src="/__/firebase/5.8.4/firebase-firestore.js"></script>
     <script defer src="/__/firebase/5.8.4/firebase-messaging.js"></script>
     <script defer src="/__/firebase/5.8.4/firebase-storage.js"></script>
     <!-- initialize the SDK after all desired features are loaded -->
@@ -18,6 +18,16 @@
     <!-- Any CSS or Font Related imports: Here using BootStrap!!!! ---->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
     crossorigin="anonymous">
+
+    <!-- Load JS after html file has been loaded fully -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+    <!-- And now my personal main javascript file! -->
+
+    <script defer src="index.js"></script>
 
   </head>
   <body>
@@ -28,14 +38,39 @@
       Upload your dash-cam data to this page!
     </p>
 
-    <!---->
+    <label for="license-plate-upload">License Plate Number:</label>
+    <div class="input-group mb-2 ml-1 mr-2">
+      <input id="license-plate-upload" type="text" placeholder="8492A23" aria-label="License Plate Number">
+    </div>
 
-    <form>
-      <div class="form-group">
-        <label for="exampleFormControlFile1">Upload license plate picture here!</label>
-        <input type="file" class="form-control-file" id="exampleFormControlFile1">
-      </div>
-      <button id="upload-data" type="submit" class="btn btn-primary">Upload</button>
-    </form>
+    <label for="gps-coords">GPS Coordinates:</label>
+    <div class="input-group mb-2 ml-1 mr-2">
+      <input id="gps-coords" type="text" placeholder="280, 36.5" aria-label="GPS Coordinates">
+    </div>
+
+    <label for="license-plate-pic">Upload license plate picture here:</label>
+    <div class="input-group mb-2 ml-1">
+        <input type="file" id="license-plate-pic">
+    </div>
+
+    <div class="input-group mb-2">
+      <button id="upload-data" type="submit" class="ml-1 btn btn-primary">Upload</button>
+    </div>
+
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">License Plate Number</th>
+                <th scope="col">GPS Coordinates</th>
+                <th scope="col">Date Published</th>
+                <th scope="col">Image</th>
+            </tr>
+        </thead>
+        <tbody id="table-of-uploads"></tbody>
+    </table>
+
+
   </body>
+
 </html>
