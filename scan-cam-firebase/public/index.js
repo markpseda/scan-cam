@@ -9,6 +9,7 @@ var storageRef = storage.ref();
 // Create reference to uploads collection
 var uploadsRef = firestore.collection('uploads');
 
+
 $("#upload-data").click(function (event) {
     console.log("Made it here!");
 
