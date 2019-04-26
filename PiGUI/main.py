@@ -11,6 +11,9 @@ camera.resolution = (1024, 768)
 
 # URL to make POST request to: https://us-central1-ud-senior-design-2018-scan-cam.cloudfunctions.net/uploadData
 
+# Website URL: https://ud-senior-design-2018-scan-cam.firebaseapp.com/
+
+
 #GPS BLOCK
 #--------------------------------------------
 gps = serial.Serial("/dev/ttyUSB0", baudrate=4800, timeout=1)
