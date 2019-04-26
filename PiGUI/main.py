@@ -44,8 +44,8 @@ def rec_func():
     flagbutton.visible=True
     stoprecordbutton.visible=True
     startrecordbutton.visible=False
-    app.repeat(1000, pic_func)
-    app.repeat(10,get_gps)
+    # app.repeat(1000, pic_func)
+    # app.repeat(10,get_gps)
 
 
 def flag_func():
