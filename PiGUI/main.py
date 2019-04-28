@@ -1,13 +1,16 @@
 from guizero import App, Text, PushButton, Slider, TextBox
-import structure
 import serial
 import pynmea2
+import requests
+from PIL import Image
+from io import BytesIO
 
 from time import sleep
-from picamera import PiCamera
+# from picamera import PiCamera
 from datetime import datetime
-camera = PiCamera()
-camera.resolution = (1024, 768)
+import time
+# camera = PiCamera()
+# camera.resolution = (1024, 768)
 
 # URL to make POST request to: https://us-central1-ud-senior-design-2018-scan-cam.cloudfunctions.net/uploadData
 
@@ -17,18 +20,21 @@ camera.resolution = (1024, 768)
 #GPS BLOCK
 #--------------------------------------------
 gps = serial.Serial("/dev/ttyUSB0", baudrate=4800, timeout=1)
-lat=''
-long=''
+lat='0'
+long='0'
+gpsCoords = lat+', '+long
 
 
 def get_gps():
     line=gps.readline()
     if line.startswith( '$GPGGA'.encode('utf-8') ) :
         msg =pynmea2.parse(line.decode("utf-8"))
-        print("Latitude: "+str(msg.latitude)+"\n"+"Longitude: "+str(msg.longitude))
+        lat = str(msg.latitude)
+        long = str(msg.longitude)
+        global gpsCoords
+        gpsCoords = lat+', '+long
+        print("Latitude: "+lat+"\n"+"Longitude: "+long)
 
-       #lat, _, lon = line.strip().split(',')[2:5]
-    msg =pynmea2.parse(line.decode("utf-8"))
     #print(str(msg))
 #--------------------------------------------------
 
@@ -42,18 +48,30 @@ def stop_func():
     app.cancel(get_gps)
 
 def rec_func():
+    timestamp =time.time()
+
+    licensePlateNum = datetime.now()
     message.value = "Recording Now"
     message.text_color ='red'
     flagbutton.visible=True
     stoprecordbutton.visible=True
     startrecordbutton.visible=False
     # app.repeat(1000, pic_func)
-    # app.repeat(10,get_gps)
+    app.repeat(10,get_gps)
 
 
 def flag_func():
-    message2 =Text(app,text='flaggin placeholder', text_color='white')
-
+    #response = requests.post('h    ttps://us-central1-ud-senior-design-2018-scan-cam.cloudfunctions.net/uploadData', json={'timestamp': str(timestamp),'license_number': str(licensePlateNum),'gps_coords': gpsCoords})
+    global gpsCoords
+    f = Image.open("Images/"+"photo001.jpg")
+    image_file = BytesIO()
+    f.save(image_file, "JPEG")
+    image_file.seek(0)
+    data = {'timestamp': str(time.time()),'license_number': str(datetime.now()),'gps_coords': gpsCoords, 'licensePlateImage': str(image_file).encode("UTF-8")}
+    response = requests.post('https://webhook.site/c1432c3c-805f-4a82-b470-e6103195a0ac', params=data)
+    print(response.status_code)
+    print(image_file)
+    f.close()
 
 def pic_func():
     get_gps()
@@ -76,7 +94,7 @@ message.text_color ='white'
 
 startrecordbutton = PushButton(app, command=rec_func, text='Start Recording', height='fill',width='fill', align='left')
 startrecordbutton.bg ='dark slate blue'
-flagbutton = PushButton(app, command=flag_func, text='Flag', visible=False, height='fill',width='fill', align='right')
+flagbutton = PushButton(app, command=flag_func, text='Post', visible=False, height='fill',width='fill', align='right')
 flagbutton.bg ='white'
 
 stoprecordbutton = PushButton(app, command=stop_func, text='Stop Recording', height='fill',width='fill', align='left', visible=False)
