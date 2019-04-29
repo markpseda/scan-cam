@@ -3,7 +3,8 @@ const functions = require('firebase-functions');
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 const admin = require('firebase-admin');
 
-var fireupload = require("express-fileupload")
+const formidable = require('formidable');
+const util = require('util');
 
 admin.initializeApp();
 
@@ -12,15 +13,35 @@ admin.initializeApp();
 
 // Take the text parameter passed to this HTTP endpoint and insert it into the
 // Realtime Database under the path /messages/:pushId/original
+
+
 exports.uploadData = functions.https.onRequest(async (req, res) => {
+    console.log("Beggining Method");
 
     if (req.method != "POST")
     {
         res.status(400).send("Should be a POST request at this URL.");
         return
     }
+    console.log("It is a post");
+
+    var form = new formidable.IncomingForm();
 
 
+
+    form.parse(req, function(err, fields, files) {
+      console.log("We in here");
+      res.writeHead(200, {'content-type': 'text/plain'});
+      res.write('received upload:\n\n');
+      res.end(util.inspect({fields: fields, files: files}));
+      console.log(util.inspect({fields: fields, files: files}));
+
+      //res.send();
+
+    });
+
+    console.log("I am there.");
+    /*
     // Grab the text parameters.
     const timestamp = req.query.timestamp;
     const license_number = req.query.license_number;
@@ -28,6 +49,7 @@ exports.uploadData = functions.https.onRequest(async (req, res) => {
     const imageRef = license_number + gps_coords;
 
     file = req.files;
+    console.log("File content:");
     console.log(file);
     console.log("this is a test")
     // upload file to storage first, then update the database
@@ -44,8 +66,9 @@ exports.uploadData = functions.https.onRequest(async (req, res) => {
         imageRef : imageRef
     });
 
+    */
     // Respond with sucess...
-    res.status(201).send("Successfully added new item to database.");
+    //res.status(201).send("Successfully added new item to database.");
 
 
 });
