@@ -58,20 +58,20 @@ def rec_func():
     stoprecordbutton.visible=True
     startrecordbutton.visible=False
     # app.repeat(1000, pic_func)
-    app.repeat(10,get_gps)
+    app.repeat(1000,get_gps)
 
 
 def flag_func():
     #response = requests.post('h    ttps://us-central1-ud-senior-design-2018-scan-cam.cloudfunctions.net/uploadData', json={'timestamp': str(timestamp),'license_number': str(licensePlateNum),'gps_coords': gpsCoords})
     global gpsCoords
-    f = Image.open("Images/photo003.jpg")
-    image_file = BytesIO()
-    f.save(image_file, "JPEG")
-    image_file.seek(0)
-    data = {'timestamp': str(time.time()),'license_number': str(datetime.now()),'gps_coords': gpsCoords, 'licensePlateImage': str(image_file).encode("UTF-8")}
-    response = requests.post(test_url, params=data)
+    f = Image.open("Images/photo134.jpg")
+    tete = open("Images/photo134.jpg",'rb')
+    dat = {'timestamp': str(round(time.time())),'license_number': 'LDGL','gps_coords': gpsCoords}
+    files = {'licensePlateImage': tete}
+    response = requests.post(prod_url, params=dat)
     print(response.status_code)
-    print(image_file)
+    print(len(response.content))
+
     f.close()
 
 def pic_func():
