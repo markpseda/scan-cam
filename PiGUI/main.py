@@ -3,7 +3,14 @@ import serial
 import pynmea2
 import requests
 from PIL import Image
-from io import BytesIO
+from google.cloud import firestore
+from google.cloud import storage
+import google.oauth2.credentials
+
+storage_client = storage.Client.from_service_account_json('service_account.json')
+db = firestore.Client.from_service_account_json('service_account.json')
+doc_ref = db.collection(u'uploads')
+bucket = storage_client.get_bucket('ud-senior-design-2018-scan-cam.appspot.com')
 
 from time import sleep
 # from picamera import PiCamera
@@ -16,7 +23,7 @@ import time
 
 # Website URL: https://ud-senior-design-2018-scan-cam.firebaseapp.com/
 test_url='https://webhook.site/c1432c3c-805f-4a82-b470-e6103195a0ac'
-prod_url='https://us-central1-ud-senior-design-2018-scan-cam.cloudfunctions.net/uploadData'
+prod_url='ud-senior-design-2018-scan-cam.appspot.com'
 
 #GPS BLOCK
 #--------------------------------------------
@@ -64,13 +71,13 @@ def rec_func():
 def flag_func():
     #response = requests.post('h    ttps://us-central1-ud-senior-design-2018-scan-cam.cloudfunctions.net/uploadData', json={'timestamp': str(timestamp),'license_number': str(licensePlateNum),'gps_coords': gpsCoords})
     global gpsCoords
-    f = Image.open("Images/photo134.jpg")
-    tete = open("Images/photo134.jpg",'rb')
-    dat = {'timestamp': str(round(time.time())),'license_number': 'LDGL','gps_coords': gpsCoords}
-    files = {'licensePlateImage': tete}
-    response = requests.post(prod_url, params=dat)
-    print(response.status_code)
-    print(len(response.content))
+    new_doc = doc_ref.document()    
+    new_doc.set({
+        u'timestamp' : timestamp,
+        u'gps_coords' : gps_coords,
+        u'imageRef' : imageRef,
+        u'license_number' : license_number
+    })
 
     f.close()
 
