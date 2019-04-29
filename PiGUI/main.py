@@ -71,15 +71,16 @@ def rec_func():
 def flag_func():
     #response = requests.post('h    ttps://us-central1-ud-senior-design-2018-scan-cam.cloudfunctions.net/uploadData', json={'timestamp': str(timestamp),'license_number': str(licensePlateNum),'gps_coords': gpsCoords})
     global gpsCoords
-    new_doc = doc_ref.document()    
+    blob = bucket.blob("Images/photo134.jpg")
+    blob.upload_from_filename("Images/photo134.jpg")
+    new_doc = doc_ref.document()
     new_doc.set({
-        u'timestamp' : timestamp,
-        u'gps_coords' : gps_coords,
+        u'timestamp' : str(round(time.time())),
+        u'gps_coords' : gpsCoords,
         u'imageRef' : imageRef,
-        u'license_number' : license_number
+        u'license_number' : 'CHIMA'
     })
 
-    f.close()
 
 def pic_func():
     get_gps()
@@ -95,7 +96,21 @@ app = App(title="Scan Cam", bg = 'black')
 #Uncomment Before Deployment
 #app.tk.attributes("-fullscreen",True)
 #run 'chown root main.py' before deployment
+import pynmea2
+import requests
+from PIL import Image
+from io import BytesIO
+from google.cloud import firestore
+from google.cloud import storage
+import google.oauth2.credentials
 
+storage_client = storage.Client.from_service_account_json('service_account.json')
+db = firestore.Client.from_service_account_json('service_account.json')
+doc_ref = db.collection(u'uploads')
+bucket = storage_client.get_bucket('ud-senior-design-2018-scan-cam.appspot.com')
+
+from time import sleep
+# from picamera import PiCamera
 
 message = Text(app, text='Scan Cam Application GUI')
 message.text_color ='white'
