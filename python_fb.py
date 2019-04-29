@@ -10,10 +10,20 @@ db = firestore.Client.from_service_account_json('service_account.json')
 
 doc_ref = db.collection(u'uploads')
 
-docs = doc_ref.get()
+new_doc = doc_ref.document()
 
-for doc in docs:
-    print(u'{} => {}'.format(doc.id, doc.to_dict()))
+timestamp = '12345'
+gps_coords = '23.2, 32.1'
+license_number = '2342A4'
+imageRef = license_number + gps_coords
+
+
+new_doc.set({
+    u'timestamp' : timestamp,
+    u'gps_coords' : gps_coords,
+    u'imageRef' : imageRef,
+    u'license_number' : license_number
+})
 
 buckets = list(storage_client.list_buckets())
 
