@@ -7,14 +7,7 @@ import google.oauth2.credentials
 storage_client = storage.Client.from_service_account_json('service_account.json')
 db = firestore.Client.from_service_account_json('service_account.json')
 
-
-
-
-
-
 doc_ref = db.collection(u'uploads')
-
-new_doc = doc_ref.document()
 
 timestamp = '3425125'
 gps_coords = '23.2, 32.1'
@@ -31,6 +24,8 @@ blob.upload_from_filename('LTM378.jpg')
 
 
 # This uploads the document
+new_doc = doc_ref.document()
+
 new_doc.set({
     u'timestamp' : timestamp,
     u'gps_coords' : gps_coords,
