@@ -23,7 +23,7 @@ $("#upload-data").click(function (event) {
 
     var timestamp = Date.now();
 
-    var imageRef = licensePlateNum + gpsCoords
+    var imageRef = licensePlateNum + gpsCoords + timestamp
 
     firestore.collection("uploads").add({
         timestamp : timestamp,

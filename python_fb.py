@@ -12,7 +12,7 @@ doc_ref = db.collection(u'uploads')
 timestamp = '3425125'
 gps_coords = '23.2, 32.1'
 license_number = '233422A4'
-imageRef = license_number + gps_coords
+imageRef = license_number + gps_coords + timestamp
 
 
 # just the default top level bucket
