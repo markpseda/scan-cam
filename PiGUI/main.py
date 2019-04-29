@@ -15,7 +15,8 @@ import time
 # URL to make POST request to: https://us-central1-ud-senior-design-2018-scan-cam.cloudfunctions.net/uploadData
 
 # Website URL: https://ud-senior-design-2018-scan-cam.firebaseapp.com/
-
+test_url='https://webhook.site/c1432c3c-805f-4a82-b470-e6103195a0ac'
+prod_url='https://us-central1-ud-senior-design-2018-scan-cam.cloudfunctions.net/uploadData'
 
 #GPS BLOCK
 #--------------------------------------------
@@ -63,12 +64,12 @@ def rec_func():
 def flag_func():
     #response = requests.post('h    ttps://us-central1-ud-senior-design-2018-scan-cam.cloudfunctions.net/uploadData', json={'timestamp': str(timestamp),'license_number': str(licensePlateNum),'gps_coords': gpsCoords})
     global gpsCoords
-    f = Image.open("Images/"+"photo001.jpg")
+    f = Image.open("Images/photo003.jpg")
     image_file = BytesIO()
     f.save(image_file, "JPEG")
     image_file.seek(0)
     data = {'timestamp': str(time.time()),'license_number': str(datetime.now()),'gps_coords': gpsCoords, 'licensePlateImage': str(image_file).encode("UTF-8")}
-    response = requests.post('https://webhook.site/c1432c3c-805f-4a82-b470-e6103195a0ac', params=data)
+    response = requests.post(test_url, params=data)
     print(response.status_code)
     print(image_file)
     f.close()
