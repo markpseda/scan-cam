@@ -69,7 +69,6 @@ def rec_func():
 
 
 def flag_func():
-    #response = requests.post('h    ttps://us-central1-ud-senior-design-2018-scan-cam.cloudfunctions.net/uploadData', json={'timestamp': str(timestamp),'license_number': str(licensePlateNum),'gps_coords': gpsCoords})
     global gpsCoords
     blob = bucket.blob("Images/photo134.jpg")
     blob.upload_from_filename("Images/photo134.jpg")
