@@ -56,8 +56,6 @@ def stop_func():
     app.cancel(get_gps)
 
 def rec_func():
-    timestamp =time.time()
-
     licensePlateNum = datetime.now()
     message.value = "Recording Now"
     message.text_color ='red'
@@ -73,11 +71,14 @@ def flag_func():
     blob = bucket.blob("Images/photo134.jpg")
     blob.upload_from_filename("Images/photo134.jpg")
     new_doc = doc_ref.document()
+    timestamp = str(round(time.time()))
+    licensePlateNum ='CHIMA'
+    imageRef = licensePlateNum + gpsCoords + timestamp
     new_doc.set({
-        u'timestamp' : str(round(time.time())),
+        u'timestamp' : timestamp,
         u'gps_coords' : gpsCoords,
         u'imageRef' : imageRef,
-        u'license_number' : 'CHIMA'
+        u'license_number' : licensePlateNum
     })
 
 
