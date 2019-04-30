@@ -1,5 +1,5 @@
 from guizero import App, Text, PushButton, Slider, TextBox
-#import Full_Recognition as gc
+import Full_Recognition as gc
 import serial
 import pynmea2
 import requests
@@ -28,14 +28,14 @@ prod_url='ud-senior-design-2018-scan-cam.appspot.com'
 
 #GPS BLOCK
 #--------------------------------------------
-#gps = serial.Serial("/dev/ttyUSB0", baudrate=4800, timeout=1)
+gps = serial.Serial("/dev/ttyUSB0", baudrate=4800, timeout=1)
 lat='0'
 long='0'
 gpsCoords = lat+', '+long
 
 
 def get_gps():
-    """
+
     line=gps.readline()
     if line.startswith( '$GPGGA'.encode('utf-8') ) :
         msg =pynmea2.parse(line.decode("utf-8"))
@@ -44,8 +44,7 @@ def get_gps():
         global gpsCoords
         gpsCoords = lat+', '+long
         print("Latitude: "+lat+"\n"+"Longitude: "+long)
-    """
-    gpsCoords = "12.33, 24.63"
+
 
     #print(str(msg))
 #--------------------------------------------------
@@ -67,7 +66,7 @@ def rec_func():
     stoprecordbutton.visible=True
     startrecordbutton.visible=False
     # app.repeat(1000, pic_func)
-    app.repeat(1000,get_gps)
+    app.repeat(100,get_gps)
 
 
 def flag_func():
@@ -75,8 +74,8 @@ def flag_func():
     new_doc = doc_ref.document()
     # seconds to ms
     timestamp = int(round(time.time() * 100))
-    #licensePlateNum = gc.readPlate("Images/photo134.jpg")
-    licensePlateNum = "1234ABC"
+    licensePlateNum = gc.readPlate("Images/photo134.jpg")
+    #licensePlateNum = "1234ABC"
     imageRef = licensePlateNum + gpsCoords + str(timestamp)
 
     blob = bucket.blob(imageRef + '.jpg')
