@@ -1,4 +1,5 @@
 from guizero import App, Text, PushButton, Slider, TextBox
+import Full_Recognition as gc
 import serial
 import pynmea2
 import requests
@@ -72,7 +73,8 @@ def flag_func():
     blob.upload_from_filename("Images/photo134.jpg")
     new_doc = doc_ref.document()
     timestamp = str(round(time.time()))
-    licensePlateNum ='CHIMA'
+    licensePlateNum = gc.readPlate("Images/photo134.jpg")
+    print(licensePlateNum)
     imageRef = licensePlateNum + gpsCoords + timestamp
     new_doc.set({
         u'timestamp' : timestamp,
