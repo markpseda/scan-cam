@@ -74,7 +74,7 @@ def flag_func():
     global gpsCoords
     new_doc = doc_ref.document()
     # seconds to ms
-    timestamp = int(round(time.time() * 100))
+    timestamp = int(round(time.time() * 1000))
     #licensePlateNum = gc.readPlate("Images/photo134.jpg")
     licensePlateNum = "1234ABC"
     imageRef = licensePlateNum + gpsCoords + str(timestamp)
