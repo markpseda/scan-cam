@@ -1,5 +1,5 @@
 from guizero import App, Text, PushButton, Slider, TextBox
-#import Full_Recognition as gc
+import Full_Recognition as gc
 import serial
 import pynmea2
 import requests
@@ -7,12 +7,6 @@ from PIL import Image
 from google.cloud import firestore
 from google.cloud import storage
 import google.oauth2.credentials
-
-storage_client = storage.Client.from_service_account_json('service_account.json')
-db = firestore.Client.from_service_account_json('service_account.json')
-doc_ref = db.collection(u'uploads')
-bucket = storage_client.get_bucket('ud-senior-design-2018-scan-cam.appspot.com')
-
 from time import sleep
 # from picamera import PiCamera
 from datetime import datetime
@@ -22,20 +16,26 @@ import time
 
 # URL to make POST request to: https://us-central1-ud-senior-design-2018-scan-cam.cloudfunctions.net/uploadData
 
-# Website URL: https://ud-senior-design-2018-scan-cam.firebaseapp.com/
-test_url='https://webhook.site/c1432c3c-805f-4a82-b470-e6103195a0ac'
-prod_url='ud-senior-design-2018-scan-cam.appspot.com'
 
-#GPS BLOCK
-#--------------------------------------------
-#gps = serial.Serial("/dev/ttyUSB0", baudrate=4800, timeout=1)
+
+#Constants/Variables
+#-------------------------------------------------------------------------------------
+gps = serial.Serial("/dev/ttyUSB0", baudrate=4800, timeout=1)
 lat='0'
 long='0'
 gpsCoords = lat+', '+long
+storage_client = storage.Client.from_service_account_json('service_account.json')
+db = firestore.Client.from_service_account_json('service_account.json')
+doc_ref = db.collection(u'uploads')
+bucket = storage_client.get_bucket('ud-senior-design-2018-scan-cam.appspot.com')
+# Website URL: https://ud-senior-design-2018-scan-cam.firebaseapp.com/
+test_url='https://webhook.site/c1432c3c-805f-4a82-b470-e6103195a0ac'
+prod_url='ud-senior-design-2018-scan-cam.appspot.com'
+imglabel = "Images/photo135.jpg"
+
 
 
 def get_gps():
-    """
     line=gps.readline()
     if line.startswith( '$GPGGA'.encode('utf-8') ) :
         msg =pynmea2.parse(line.decode("utf-8"))
@@ -44,10 +44,8 @@ def get_gps():
         global gpsCoords
         gpsCoords = lat+', '+long
         print("Latitude: "+lat+"\n"+"Longitude: "+long)
-    """
-    gpsCoords = "12.33, 24.63"
 
-    #print(str(msg))
+
 #--------------------------------------------------
 
 def stop_func():
@@ -72,15 +70,16 @@ def rec_func():
 
 def flag_func():
     global gpsCoords
+    global imglabel
     new_doc = doc_ref.document()
     # seconds to ms
     timestamp = int(round(time.time() * 1000))
-    #licensePlateNum = gc.readPlate("Images/photo134.jpg")
-    licensePlateNum = "1234ABC"
+
+    licensePlateNum = gc.readPlate(imglabel)
     imageRef = licensePlateNum + gpsCoords + str(timestamp)
 
     blob = bucket.blob(imageRef + '.jpg')
-    blob.upload_from_filename("Images/photo134.jpg")
+    blob.upload_from_filename(imglabel)
 
 
     print(timestamp)
@@ -98,9 +97,9 @@ def flag_func():
 
 
 def pic_func():
-    get_gps()
-    imglabel=str(datetime.now())+'.jpg'
-    camera.capture('Images/'+imglabel);
+    global imglabel
+    imglabel="Images/"+str(datetime.now())+'.jpg'
+    camera.capture(imglabel);
 
 def slider1_changed(slider_value):
     textbox1.value = slider_value
@@ -111,21 +110,7 @@ app = App(title="Scan Cam", bg = 'black')
 #Uncomment Before Deployment
 #app.tk.attributes("-fullscreen",True)
 #run 'chown root main.py' before deployment
-import pynmea2
-import requests
-from PIL import Image
-from io import BytesIO
-from google.cloud import firestore
-from google.cloud import storage
-import google.oauth2.credentials
 
-storage_client = storage.Client.from_service_account_json('service_account.json')
-db = firestore.Client.from_service_account_json('service_account.json')
-doc_ref = db.collection(u'uploads')
-bucket = storage_client.get_bucket('ud-senior-design-2018-scan-cam.appspot.com')
-
-from time import sleep
-# from picamera import PiCamera
 
 message = Text(app, text='Scan Cam Application GUI')
 message.text_color ='white'
