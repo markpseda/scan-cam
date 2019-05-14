@@ -54,7 +54,17 @@ uploadsRef.orderBy('timestamp').onSnapshot(function(uploads){
 
         var imgURL = "";
 
-        $("#table-of-uploads").append('<tr><td id = "' + upload.id +'">' + uploadData.license_number + '</td><td>' + uploadData.gps_coords + '</td><td>' + date + '</td><td> <img id="' + uploadData.imageRef.split(' ').join('').split(',').join('').split('.').join('') + '" src="' + imgURL + '" height = "100" width = "200"/></td>');
+        $("#table-of-uploads").append('<tr id = "' + upload.id +'"><td>' + uploadData.license_number + '</td><td>' + uploadData.gps_coords + '</td><td>' + date + '</td><td> <img id="' + uploadData.imageRef.split(' ').join('').split(',').join('').split('.').join('') + '" src="' + imgURL + '" height = "100" width = "200"/></td><td> <button id="'+ upload.id + '_delete">Delete</button> </td></tr>');
+
+        $("#" + upload.id + "_delete").click(function (event) {
+          console.log("Doing a thing to delete!!!" + upload.id);
+          uploadsRef.doc(upload.id).delete().then(function(){
+            console.log("Deleted document succesfully!")
+          });
+        });
+
+
+
 
         imgRef.getDownloadURL().then(function(url)
         {
