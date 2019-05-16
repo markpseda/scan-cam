@@ -99,7 +99,7 @@ def flag_func():
 def pic_func():
     global imglabel
     imglabel="Images/"+str(datetime.now())+'.jpg'
-    (ec.capture(0,False,imglabel))
+    (ec.capture(1,False,imglabel))
 
 def slider1_changed(slider_value):
     textbox1.value = slider_value
