@@ -28,14 +28,21 @@ def find_plate(filename, model): #filename,model
     # run the prediction
     predictions = model.predict(image_sarray) # make predictions
 
+    print(predictions)
     # crop based on the bounding box (there might be more than one - deal with that later)
-    y = int(round(predictions[0][0]['coordinates']['y']))
-    x = int(round(predictions[0][0]['coordinates']['x']))
-    w = int(round((predictions[0][0]['coordinates']['width'])/2))
-    h = int(round((predictions[0][0]['coordinates']['height'])/2))
+    if len(predictions[0]) != 0:
+        y = int(round(predictions[0][0]['coordinates']['y']))
+        x = int(round(predictions[0][0]['coordinates']['x']))
+        w = int(round((predictions[0][0]['coordinates']['width'])/2))
+        h = int(round((predictions[0][0]['coordinates']['height'])/2))
 
-    cropped = image[y-h:y+h,x-w:x+w]
-    return cropped
+        cropped = image[y-h:y+h,x-w:x+w]
+        ifplate = True
+
+    else:
+        cropped = image
+        ifplate = False
+    return [cropped, ifplate]
 
 
 # code that takes in the cropped plate and does character recognition, returns just the character string
@@ -96,14 +103,20 @@ def full_recognition(image,plate_model,char_model):
     Image.fromarray(image).save(filename)
 
     # do plate recognition to crop out the plate
-    plate = find_plate('platephoto.jpg',plate_model)
+    results = find_plate('platephoto.jpg',plate_model)
+    plate = results[0]
+    ifplate = results[1]
 
-    # save the cropped plate to a file (can overwrite existing files here as well)
-    filename = 'new_char_test_images/plate.jpg'
-    Image.fromarray(plate).save(filename)
+    if ifplate:
+        # save the cropped plate to a file (can overwrite existing files here as well)
+        filename = 'new_char_test_images/plate.jpg'
+        Image.fromarray(plate).save(filename)
 
-    # do character recognition
-    plate_num = read_plate('plate.jpg',char_model)
+        # do character recognition
+        plate_num = read_plate('plate.jpg',char_model)
+
+    else:
+        plate_num = " "
 
     return plate_num
 
