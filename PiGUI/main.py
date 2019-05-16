@@ -8,6 +8,7 @@ from google.cloud import firestore
 from google.cloud import storage
 import google.oauth2.credentials
 from time import sleep
+from ecapture import ecapture as ec
 # from picamera import PiCamera
 from datetime import datetime
 import time
@@ -64,7 +65,7 @@ def rec_func():
     flagbutton.visible=True
     stoprecordbutton.visible=True
     startrecordbutton.visible=False
-    # app.repeat(1000, pic_func)
+    app.repeat(1000, pic_func)
     app.repeat(1000,get_gps)
 
 
@@ -74,7 +75,6 @@ def flag_func():
     new_doc = doc_ref.document()
     # seconds to ms
     timestamp = int(round(time.time() * 1000))
-
     licensePlateNum = gc.readPlate(imglabel)
     imageRef = licensePlateNum + gpsCoords + str(timestamp)
 
@@ -99,7 +99,7 @@ def flag_func():
 def pic_func():
     global imglabel
     imglabel="Images/"+str(datetime.now())+'.jpg'
-    camera.capture(imglabel);
+    (ec.capture(0,False,imglabel))
 
 def slider1_changed(slider_value):
     textbox1.value = slider_value
